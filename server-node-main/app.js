@@ -27,10 +27,19 @@ mongoose
   .catch((e) => console.log(e));
 
 require("./userDetails");
-// require("./imageDetails");
+require("./comment");
+require("./conformcomments");
+require("./replies");
+
 
 const User = mongoose.model("UserInfo");
-// const Images = mongoose.model("ImageDetails");
+const comments = mongoose.model("pandincomments");
+const replies = mongoose.model("replyies");
+const conformcom = mongoose.model("conformcomments");
+
+
+
+
 app.post("/register", async (req, res) => {
   const { fname, lname, email, password, userType } = req.body;
 
@@ -211,54 +220,188 @@ app.post("/deleteUser", async (req, res) => {
 });
 
 
-// app.post("/upload-image", async (req, res) => {
-//   const { base64 } = req.body;
-//   try {
-//     await Images.create({ image: base64 });
-//     res.send({ Status: "ok" })
+app.post("/addcomment", async (req, res) => {
+  const { user, email, comment } = req.body;
+  console.log(req.body);
+  try {
+    await comments.create({
+      user,
+      email,
+      comment,
+      // createdat,
+    });
+    res.send({ status: "ok" });
+  } catch (error) {
+    res.send({ status: "error" });
+  }
+});
 
-//   } catch (error) {
-//     res.send({ Status: "error", data: error });
+app.get("/getpendingcomment", async (req, res) => {
+  try {
+    const allcomment = await comments.find({});
+    res.send({ status: "ok", comments : allcomment });
+  } catch (error) {
+    console.log(error);
+  }
+});
 
-//   }
-// })
+app.post("/conformedpost", async (req, res) => {
+  const { conformedpostID } = req.body;
+  try {
+    const approved = await comments.findOne({ _id: conformedpostID });
+    await conformcom.create({
+      user: approved.user,
+      email: approved.email,
+      comment: approved.comment,
+      createdAt : approved.createdAt,
+    });
 
-// app.get("/get-image", async (req, res) => {
-//   try {
-//     await Images.find({}).then(data => {
-//       res.send({ status: "ok", data: data })
-//     })
+    comments.deleteOne({ _id: conformedpostID }, function (err) {
+      if (err) {
+        console.log(err);
+        res.send({ status: "Error", message: "Failed to delete comment" });
+      } else {
+        res.send({ status: "Ok", data: "conformed" });
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.send({ status: "Error", message: "Failed to conform comment" });
+  }
+});
 
-//   } catch (error) {
+app.post("/addcommentadmin", async (req, res) => {
+  const { user, email, comment} = req.body;
+  console.log(req.body);
+  try {
+    await conformcom.create({
+      user,
+      email,
+      comment,
+      createdAt : Date.now(),
+    });
+    res.send({ status: "ok" });
+  } catch (error) {
+    res.send({ status: "error" });
+  }
+});
 
-//   }
-// })
 
-// app.get("/paginatedUsers", async (req, res) => {
-//   const allUser = await User.find({});
-//   const page = parseInt(req.query.page)
-//   const limit = parseInt(req.query.limit)
 
-//   const startIndex = (page - 1) * limit
-//   const lastIndex = (page) * limit
 
-//   const results = {}
-//   results.totalUser=allUser.length;
-//   results.pageCount=Math.ceil(allUser.length/limit);
 
-//   if (lastIndex < allUser.length) {
-//     results.next = {
-//       page: page + 1,
-//     }
-//   }
-//   if (startIndex > 0) {
-//     results.prev = {
-//       page: page - 1,
-//     }
-//   }
-//   results.result = allUser.slice(startIndex, lastIndex);
-//   res.json(results)
-// })
+
+app.get("/getconformedpost", async (req, res) => {
+  try {
+    const allconformed = await conformcom.find({});
+    res.send({ status: "ok", comments: allconformed });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+
+
+app.post("/deletecomment", async (req, res) => {
+  const { commentID } = req.body;
+  try {
+    comments.deleteOne({ _id: commentID }, function (err, res) {
+      console.log(err);
+    });
+    res.send({ status: "Ok", data: "Deleted" });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+
+app.post("/addreply", async (req, res) => {
+  const { commetID,username, email, reply } = req.body;
+  console.log(req.body);
+  try {
+    await replies.create({
+      commetID,
+      username,
+      email,
+      reply,
+    });
+    res.send({ status: "ok" });
+  } catch (error) {
+    res.send({ status: "error" });
+  }
+});
+
+ 
+
+
+
+app.get("/paginatedUsers", async (req, res) => {
+  const allUser = await User.find({});
+  const page = parseInt(req.query.page)
+  // const limit = parseInt(req.query.limit)
+  const limit = 10 ;
+
+  const startIndex = (page - 1) * limit
+  const lastIndex = (page) * limit
+
+  const results = {}
+  results.totalUser=allUser.length;
+  results.pageCount=Math.ceil(allUser.length/limit);
+
+  if (lastIndex < allUser.length) {
+    results.next = {
+      page: page + 1,
+    }
+  }
+  if (startIndex > 0) {
+    results.prev = {
+      page: page - 1,
+    }
+  }
+  results.result = allUser.slice(startIndex, lastIndex);
+  res.json(results)
+})
+
+
+app.get("/paginatedUsers2", async (req, res) => {
+  const allcomment = await comments.find({});
+  const page = parseInt(req.query.page)
+  // const limit = parseInt(req.query.limit)
+  const limit = 10 ;
+
+  const startIndex = (page - 1) * limit
+  const lastIndex = (page) * limit
+
+  const results = {}
+  results.totalUser=allcomment.length;
+  results.pageCount=Math.ceil(allcomment.length/limit);
+
+  if (lastIndex < allcomment.length) {
+    results.next = {
+      page: page + 1,
+    }
+  }
+  if (startIndex > 0) {
+    results.prev = {
+      page: page - 1,
+    }
+  }
+  results.result = allcomment.slice(startIndex, lastIndex);
+  res.json(results)
+})
+
+app.get("/paginatedUsers3", async (req, res) => {
+  const allcomment = await conformcom.find({});
+  const page = parseInt(req.query.page)
+  // const limit = parseInt(req.query.limit)
+  const limit = 10 ;
+
+  const startIndex = (page - 1) * limit
+  const lastIndex = (page) * limit
+
+  const results = {}
+  results.totalUser=allcomment.length;
+  results.pageCount=Math.ceil(allcomment.length/limit);
 
   if (lastIndex < allcomment.length) {
     results.next = {
