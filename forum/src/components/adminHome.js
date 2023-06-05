@@ -1,34 +1,28 @@
 import React, { Component, useEffect, useState } from "react";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import { faHandPointRight  } from "@fortawesome/free-solid-svg-icons";
-
-
+import { faHandPointRight } from "@fortawesome/free-solid-svg-icons";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import ReactPaginate from 'react-paginate';
+import ReactPaginate from "react-paginate";
 import { useRef } from "react";
 export default function AdminHome({ userData }) {
-
   //setting state
   const [data, setData] = useState([]);
-  const [pageCount,setPageCount]=useState(1);
-  const [pageCount2,setPageCount2]=useState(1);
+  const [pageCount, setPageCount] = useState(1);
+  const [pageCount2, setPageCount2] = useState(1);
 
-  const [search,setsearch]=useState("");
+  const [search, setsearch] = useState("");
 
   const [comments, setComments] = useState([]);
-  const currentPage=useRef();
-  const currentPage2=useRef();
+  const currentPage = useRef();
+  const currentPage2 = useRef();
   const [fname, setFname] = useState("");
   const [email, setEmail] = useState("");
   const [msg, setMsg] = useState("");
-  
-
-
 
   useEffect(() => {
-    currentPage.current=1;
-    currentPage2.current=1;
+    currentPage.current = 1;
+    currentPage2.current = 1;
     // getAllUser();
     // getPendingComment();
     getPaginatedUsers();
@@ -40,7 +34,6 @@ export default function AdminHome({ userData }) {
     setEmail(userData.email);
     setFname(userData.fname);
   };
-
 
   //fetching all user
   const getAllUser = () => {
@@ -65,14 +58,11 @@ export default function AdminHome({ userData }) {
       });
   };
 
-
-
-//logout
+  //logout
   const logOut = () => {
     window.localStorage.clear();
     window.location.href = "./sign-in";
   };
-
 
   //deleting user
   const deleteUser = (id, name) => {
@@ -94,15 +84,10 @@ export default function AdminHome({ userData }) {
           alert(data.data);
           getAllUser();
           // getpendingcomment();
-        
-          
-          
         });
     } else {
     }
   };
-
-
 
   const deletecomment = (id) => {
     if (window.confirm(`Are you sure you want to delete that comment`)) {
@@ -115,7 +100,7 @@ export default function AdminHome({ userData }) {
           "Access-Control-Allow-Origin": "*",
         },
         body: JSON.stringify({
-          commentID : id,
+          commentID: id,
         }),
       })
         .then((res) => res.json())
@@ -123,9 +108,6 @@ export default function AdminHome({ userData }) {
           alert(data.data);
           // getAllUser();
           getPendingComment();
-        
-          
-          
         });
     } else {
     }
@@ -149,43 +131,42 @@ export default function AdminHome({ userData }) {
         .then((data) => {
           alert(data.data);
           getPendingComment();
-        
-          
-          
         });
     } else {
     }
   };
 
-
   //pagination
   function handlePageClick(e) {
     console.log(e);
-   currentPage.current=e.selected+1;
+    currentPage.current = e.selected + 1;
     getPaginatedUsers();
-   
-
   }
 
   function handlecomment(e) {
     console.log(e);
-   currentPage2.current=e.selected+1;
-   getPaginatedUsers2();
-   
-
+    currentPage2.current = e.selected + 1;
+    getPaginatedUsers2();
   }
 
-
-
-
-  function changeLimit(e){
-    currentPage.current=1;
-    getPaginatedUsers();
-
-    
+  function changeLimit(e) {
+    console.log(search);
+    fetch(`http://localhost:5000/getsearch?search=${search}`, {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data, "userData");
+        setComments(data.comments);
+        getPaginatedUsers2();
+      });
   }
 
-  function getPaginatedUsers(){
+  function resettable() {
+    getPaginatedUsers2();
+  }
+
+  function getPaginatedUsers() {
     fetch(`http://localhost:5000/paginatedUsers?page=${currentPage.current}`, {
       method: "GET",
     })
@@ -193,37 +174,29 @@ export default function AdminHome({ userData }) {
       .then((data) => {
         console.log(data, "userData");
         setPageCount(data.pageCount);
-        setData(data.result)
-
-        
-       
+        setData(data.result);
       });
-
   }
 
-  function getPaginatedUsers2(){
-    fetch(`http://localhost:5000/paginatedUsers2?page=${currentPage2.current}`, {
-      method: "GET",
-    })
+  function getPaginatedUsers2() {
+    fetch(
+      `http://localhost:5000/paginatedUsers2?page=${currentPage2.current}&search=${search}`,
+      {
+        method: "GET",
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         console.log(data, "userData");
         setPageCount2(data.pageCount);
-        setComments(data.result)
-
-        
-       
+        setComments(data.result);
+        setsearch("");
       });
-
   }
-
-
-
-
 
   const handleQuestionSubmit = (e) => {
     e.preventDefault();
-  
+
     fetch("http://localhost:5000/addcommentadmin", {
       method: "POST",
       crossDomain: true,
@@ -242,7 +215,7 @@ export default function AdminHome({ userData }) {
       .then((data) => {
         console.log(data, "userRegister");
         setMsg("");
-  
+
         if (data.status === "ok") {
           alert("Registration Successful");
         } else {
@@ -250,7 +223,6 @@ export default function AdminHome({ userData }) {
         }
       });
   };
-
 
   return (
     <div className="auth-wrapper" style={{ height: "auto" }}>
@@ -296,10 +268,15 @@ export default function AdminHome({ userData }) {
           nextClassName="page-item"
           nextLinkClassName="page-link"
           activeClassName="active"
-          forcePage={currentPage.current-1}
+          forcePage={currentPage.current - 1}
         />
-        <input placeholder="Date" onChange={e=>setsearch(e.target.value)}/>
+        <input
+          placeholder="Name"
+          value={search}
+          onChange={(e) => setsearch(e.target.value)}
+        />
         <button onClick={changeLimit}>search</button>
+        <button onClick={resettable}>Reset</button>
 
         <table style={{ width: 500 }}>
           <tr>
@@ -308,14 +285,14 @@ export default function AdminHome({ userData }) {
             <th>approve</th>
             <th>Delete</th>
           </tr>
-          {comments.map((c) => {
-            return (
-              <tr>
+          {comments.length > 0 ? (
+            comments.map((c) => (
+              <tr key={c._id}>
                 <td>{c.user}</td>
                 <td>{c.comment}</td>
                 <td>
                   <FontAwesomeIcon
-                    icon={ faHandPointRight }
+                    icon={faHandPointRight}
                     onClick={() => conformedpost(c._id)}
                   />
                 </td>
@@ -326,8 +303,12 @@ export default function AdminHome({ userData }) {
                   />
                 </td>
               </tr>
-            );
-          })}
+            ))
+          ) : (
+            <tr>
+              <td colSpan={4}>No comments found</td>
+            </tr>
+          )}
         </table>
         <ReactPaginate
           breakLabel="..."
@@ -346,32 +327,31 @@ export default function AdminHome({ userData }) {
           nextClassName="page-item"
           nextLinkClassName="page-link"
           activeClassName="active"
-          forcePage={currentPage2.current-1}
+          forcePage={currentPage2.current - 1}
         />
 
-      <div className="container">
-        <div className="panel panel-default">
-          <div className="panel-body">
-            <h3>Any post</h3>
-            <hr />
-            <form onSubmit={handleQuestionSubmit}>
-              <div className="form-group">
-                <label htmlFor="comment">Write your question:</label>
-                <textarea
-                  className="form-control"
-                  rows="5"
-                  name="msg"
-                  value={msg}
-                  onChange={handleMessageChange}
-                  required
-                ></textarea>
-              </div>
-              <input type="submit" className="btn btn-primary" value="Send" />
-            </form>
+        <div className="container">
+          <div className="panel panel-default">
+            <div className="panel-body">
+              <h3>Any post</h3>
+              <hr />
+              <form onSubmit={handleQuestionSubmit}>
+                <div className="form-group">
+                  <label htmlFor="comment">Write your question:</label>
+                  <textarea
+                    className="form-control"
+                    rows="5"
+                    name="msg"
+                    value={msg}
+                    onChange={handleMessageChange}
+                    required
+                  ></textarea>
+                </div>
+                <input type="submit" className="btn btn-primary" value="Send" />
+              </form>
+            </div>
           </div>
         </div>
-      </div>
-
 
         <button onClick={logOut} className="btn btn-primary">
           Log Out

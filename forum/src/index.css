@@ -1,13 +1,478 @@
-body {
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Ubuntu:wght@400;500;700&display=swap');
+
+*{
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.auth-wrapper {
+  background: #1c8ef9 !important;
+  min-height: 100vh;
+  display: flex;
+  font-weight: 400;
+  font-family: 'Ubuntu', sans-serif;
 }
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+label,
+span {
+  font-weight: 500;
+  font-family: 'Ubuntu', sans-serif;
+}
+
+body,
+html,
+.App,
+#root,
+.auth-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.navbar-light {
+  background-color: #ffffff;
+  box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
+}
+
+.auth-wrapper {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: left;
+}
+
+.auth-inner {
+  width: 450px;
+  margin: auto;
+  background: #ffffff;
+  box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
+  padding: 40px 55px 45px 55px;
+  border-radius: 15px;
+  transition: all 0.3s;
+}
+
+.auth-wrapper .form-control:focus {
+  border-color: #167bff;
+  box-shadow: none;
+}
+
+.auth-wrapper h3 {
+  text-align: center;
+  margin: 0;
+  line-height: 1;
+  padding-bottom: 20px;
+}
+
+.custom-control-label {
+  font-weight: 400;
+}
+
+
+
+/* 
+.popup{
+  width: 70%;
+  height: 80%;
+  background-color: crimson;
+  border-radius: 30px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  border-style: solid;
+  border-color: white;
+  transform: translate(-50%,-50%) scale(1);
+  text-align: center;
+  padding: 0 30px 30px;
+  visibility: visible;
+  transition: transform 0.4s, top 0.4ms;
+  z-index: 1;
+} */
+
+
+
+.main{
+  visibility: visible;
+
+}
+
+.new_main{
+  filter: blur(20px);
+  pointer-events: none;
+  user-select: none;
+}
+
+
+ /* #popup .table table {
+  
+  margin-top: 5%;
+  margin-left: 0.5%;
+
+
+}  */
+
+
+
+
+
+
+/* .table tr:nth-child(even) td {
+  background-color: #f2f2f2;
+} */
+/* #popup .table table  {
+  border-collapse: separate;
+  border-spacing: 0 20px; 
+}  */
+
+.home{
+  display: flex;
+  background: url("./images/Studio_Project_V1.gif") no-repeat center;
+  height: 100vh;
+  color: #fff;
+  min-height: 500px;
+  background-size: cover;
+  background-attachment: fixed;
+  font-family: 'Ubuntu', sans-serif;
+}
+.typewriter{
+ margin-top: 15%;
+ margin-left: 5%;
+}
+.typewriter h1 {
+  font-size: 50px;
+  overflow: hidden; /* Ensures the content is not revealed until the animation */
+  border-right: .15em solid crimson; /* The typwriter cursor */
+  white-space: nowrap; /* Keeps the content on a single line */
+  margin: 0 auto; /*Gives that scrolling effect as the typing happens */
+  letter-spacing: .15em; /* Adjust as needed */
+  animation: typing 8s steps(40) infinite;
+}
+.typewriter .text{
+  font-size: 100px;
+  color: crimson;
+  font-weight: bold;
+}
+.typewriter h4 {
+
+  margin-top: 2%;
+  color: crimson;
+}
+
+/* The typing effect */
+
+@keyframes typing {
+  0% { width: 0; }
+  50% { width: 100%; }
+  100% { width: 0; }
+}
+
+
+/* The typewriter cursor effect */
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: crimson; }
+}
+
+
+
+.about{
+  background-color: #fff;
+  font-family: 'Ubuntu', sans-serif;
+}
+.about h2{
+  padding-top: 4%;
+  font-weight: bold;
+}
+.about h3{
+  color: crimson; 
+  font-size: 20px;
+}
+
+.about .about-content .column_left img{
+
+  margin-top: 5%;
+  height: 400px;
+  width: 400px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 5%;
+
+}
+.about .about-content .right .text{
+
+  font-size: 25px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.about .about-content .right .text span{
+  color: crimson;
+}
+.about .about-content .right p{
+  width: 60%;
+  margin-left: 20%;
+  padding-bottom: 5%;
+}
+.Community_forum{
+  background-color: #0a0a0a;
+  color: #edfafa;
+
+}
+.Community_forum .panel-default{
+  padding-top: 3%;
+}
+.Community_forum h3{
+  color: crimson; 
+  font-size: 20px;
+  margin-bottom: 4%;
+}
+.Community_forum .form-group textarea{
+  resize: none;
+  margin-left: 20%;
+  width: 60%;
+
+}
+.Community_forum .form-group .comment{
+  font-weight: bold;
+  font-size: 20px;
+  text-align: left;
+  margin-left: 20%;
+  margin-bottom: 1%;
+}
+
+.Community_forum .searchBar{
+  margin-left: 70%;
+  margin-bottom: 1%;
+}
+
+.Community_forum .comment_table{
+  color: #fff;
+  width: 100%;
+}
+
+.Community_forum .comment_tab{
+  padding-bottom: 2%;
+
+}
+
+table,
+th,
+td {
+  border: 1px solid crimson !important;
+  background-color:transparent;
+
+}
+
+.Community_forum .button{
+  display: flex;
+  margin-top: 1%;
+  justify-content: center;
+  gap: 10px; /* Adjust the value as needed */
+  margin-left: 38%;
+  padding-bottom: 3%;
+}
+.Community_forum .button button{
+  color: #fff;
+  display: block;
+  width:15%!important;
+  height: 9%;
+  outline: none;
+  font-size: 100%;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  flex-wrap: nowrap;
+  background: rgb(33, 20, 220);
+  border: 2px solid rgb(33, 20, 220);
+  transition: all 0.3s ease;
+}
+
+.Community_forum .button button:hover{
+  color: rgb(33, 20, 220);
+  background: none;
+}
+
+
+
+/* .panel-body {
+  background-color: #edfafa;
+  border-radius: 10px;
+}
+
+#MyTable {
+  border: 0;
+}
+
+.form-group {
+  margin-bottom: 15px;
+} */
+
+.controlepanal{
+  background-color: #fff;
+  font-family: 'Ubuntu', sans-serif;
+}
+
+.controlepanal .control h3 {
+  color: crimson; 
+  font-size: 20px;
+  margin-bottom: 4%;
+
+}
+
+.controlepanal .control h2{
+  font-weight: bold;
+  padding-top: 4%;
+}
+
+.controlepanal .tables{
+  margin-left: 15%;
+  justify-content: center;
+
+}
+.controlepanal .tables .controle_table{
+  width: 80%;
+  padding-bottom: 3%;
+}
+
+.controlepanal .tables .approve_table , .Pending_table{
+  padding-bottom: 3%;
+}
+
+.controlepanal .tables  h4{
+  color: black;
+  font-weight: bold;
+  text-align: left;
+  padding-bottom: 1%;
+}
+
+
+.popup {
+  color: #edfafa;
+  width: 80%;
+  height: 70%;
+  background-color: rgb(20, 20, 20);
+  border-radius: 30px;
+  position: fixed;
+  top: 0;
+  left: 50%;
+  border-style: solid;
+  border-color: crimson;
+  transform: translate(-50%, -50%) scale(0.01);
+  padding: 0 30px 30px;
+  visibility: hidden;
+  transition: transform 0.4s, top 0.4ms;
+  z-index: 10;
+}
+
+.new_pop {
+  top: 50%;
+  visibility: visible;
+  transform: translate(-50%, -50%) scale(1);
+}
+.popup .comment_body{
+  padding-top: 1%;
+  height: 52%;
+  width: 40%;
+}
+
+.popup .comment_body .comment {
+  border: 1px solid rgb(228, 220, 220);
+  border-radius: 10px;
+  height: 100%;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+
+.popup .reply_body {
+  padding-top: 2%;
+
+  height: 48%;
+  width: 40%;
+}
+
+.popup .reply_body textarea {
+  resize: none;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+
+
+
+.popup .reply_body .button{
+  display: flex;
+  margin-top: 1%;
+  justify-content: center;
+  gap: 10px; /* Adjust the value as needed */
+  justify-content: end;
+  padding-bottom: 3%;
+}
+.popup .reply_body .button button{
+  color: #fff;
+  display: block;
+  width:15%!important;
+  height: 9%;
+  outline: none;
+  font-size: 100%;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  flex-wrap: nowrap;
+  background: rgb(33, 20, 220);
+  border: 2px solid rgb(33, 20, 220);
+  /* transition: all 0.1s ease; */
+}
+
+.popup .reply_body .button button:hover{
+  color: rgb(33, 20, 220);
+  background: none;
+}
+
+.popup .reply_table{
+  justify-content: center;
+  height: 97%;
+  width: 55%;
+  margin-left: 45%;
+  margin-top: -42%;
+}
+
+.popup .reply_table .table{
+  height: 97%;
+  border-color: white;
+  border-style: solid;
+  border-radius: 10px;
+  justify-items: center;
+  justify-content: center;
+  color: #fff;
+  overflow: hidden;
+  overflow-y: scroll;
+  
+}
+
+.popup .reply_table .table table{
+  width: 100%;  
+}
+/*
+
+#popup .oldreply {
+  margin-top: -41%;
+  margin-left: 65%;
+} */
+
+/* #popup .table {
+  color: #edfafa;
+  height: 90%;
+  border: 1px solid black;
+  width: 100%;
+  margin-left: 65%;
+  z-index: 1000;
+  margin-top: 1%; */
+  /* border-spacing: 10px;  */
+  /* overflow: hidden;
+  overflow-y: scroll;
+  
+} */

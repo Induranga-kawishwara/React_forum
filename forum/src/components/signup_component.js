@@ -5,7 +5,7 @@ export default function SignUp() {
   const [lname, setLname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [userType, setUserType] = useState("");
+  const [userType, setUserType] = useState("User");
   const [secretKey, setSecretKey] = useState("");
 
   const handleSubmit = (e) => {

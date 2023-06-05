@@ -291,10 +291,11 @@ app.post("/addcommentadmin", async (req, res) => {
 
 
 
-app.get("/getconformedpost", async (req, res) => {
+app.get("/getallreplies", async (req, res) => {
+  const selecte = req.query.selecte;
   try {
-    const allconformed = await conformcom.find({});
-    res.send({ status: "ok", comments: allconformed });
+    const allcreplyies = await replies.find({ commentID: selecte });
+    res.send({ status: "ok", allreplyies: allcreplyies });
   } catch (error) {
     console.log(error);
   }
@@ -316,11 +317,11 @@ app.post("/deletecomment", async (req, res) => {
 
 
 app.post("/addreply", async (req, res) => {
-  const { commetID,username, email, reply } = req.body;
+  const { commentID , username, email, reply } = req.body;
   console.log(req.body);
   try {
     await replies.create({
-      commetID,
+      commentID ,
       username,
       email,
       reply,
@@ -364,8 +365,19 @@ app.get("/paginatedUsers", async (req, res) => {
 
 
 app.get("/paginatedUsers2", async (req, res) => {
-  const allcomment = await comments.find({});
+  const search = (req.query.search)
+  console.log(search);
+  let allcomment = [];
   const page = parseInt(req.query.page)
+
+  if (!search) {
+    console.log("mona huththakda");
+    allcomment = await comments.find({});
+  }else{
+    allcomment = await comments.find({user: search});
+  }
+  // const allcomment = await comments.find({});
+  // const page = parseInt(req.query.page)
   // const limit = parseInt(req.query.limit)
   const limit = 10 ;
 
@@ -391,8 +403,20 @@ app.get("/paginatedUsers2", async (req, res) => {
 })
 
 app.get("/paginatedUsers3", async (req, res) => {
-  const allcomment = await conformcom.find({});
+
+  const search = (req.query.search)
+  console.log(search);
+  let allcomment = [];
   const page = parseInt(req.query.page)
+
+  if (!search) {
+    allcomment = await conformcom.find({});
+  }else{
+    allcomment = await conformcom.find({user: search});
+  }
+
+  // const allcomment = await conformcom.find({});
+  // const page = parseInt(req.query.page)
   // const limit = parseInt(req.query.limit)
   const limit = 10 ;
 
@@ -416,3 +440,82 @@ app.get("/paginatedUsers3", async (req, res) => {
   results.result = allcomment.slice(startIndex, lastIndex);
   res.json(results)
 })
+
+
+app.get("/getsearch", async (req, res) => {
+
+  const search = (req.query.search)
+  console.log(search);
+  try {
+    const allcomment = await comments.find({user: search});
+    res.send({ status: "ok", comments : allcomment });
+    console.log(search);
+    console.log(allcomment);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.get("/getusersearch", async (req, res) => {
+
+  const search = (req.query.search)
+  try {
+    const allcomment = await conformcom.find({user: search});
+    res.send({ status: "ok", comments : allcomment });
+    console.log(search);
+    console.log(allcomment);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+
+app.get("/owncomments", async (req, res) => {
+  const name = req.query.name;
+  console.log(name);
+  const email = req.query.email;
+  console.log(email);
+  const isapprove = req.query.isapprove;
+  console.log(isapprove);
+  let owncomment = [];
+  try {
+    if (isapprove === "Approve") {
+      owncomment = await conformcom.find({ user: name, email: email });
+      console.log("awwwww");
+      console.log(owncomment);
+    } else {
+      owncomment = await comments.find({ user: name, email: email });
+      console.log("giyaaaa");
+    }
+    res.send({ status: "ok", data: owncomment });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.post("/deleteowncommentr", async (req, res) => {
+  const { commentId } = req.body;
+  try {
+    conformcom.deleteOne({ _id: commentId }, function (err, res) {
+      console.log(err);
+    });
+    res.send({ status: "Ok", data: "Deleted" });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+
+
+app.post("/deletependingowncommentr", async (req, res) => {
+  const name = req.query.name;
+  const { commentId } = req.body;
+  try {
+    comments.deleteOne({ _id: commentId }, function (err, res) {
+      console.log(err);
+    });
+    res.send({ status: "Ok", data: "Deleted" });
+  } catch (error) {
+    console.log(error);
+  }
+});
