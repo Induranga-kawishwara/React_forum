@@ -7,6 +7,10 @@ A platform for discussions and sharing information.
 - Node.js (version X.X.X) - [Installation Guide](https://nodejs.org)
 - MongoDB (version X.X.X) - [Installation Guide](https://docs.mongodb.com/manual/installation/)
 
+## Video on how to run the code:
+
+https://drive.google.com/file/d/18f_D3vNDRidfnk5d-eOYmnS0ArJdqjcj/view?usp=sharing
+
 ## API Server
 
 ### Installation
