@@ -5,15 +5,32 @@ Short description of the project.
 ## Prerequisites
 
 - Node.js (version X.X.X) - [Installation Guide](https://nodejs.org)
+- MongoDB (version X.X.X) - [Installation Guide](https://docs.mongodb.com/manual/installation/)
+
+##for excute the server (API)
+## Installation
+
+1. Clone the repository or download the project ZIP file.
+2. Open the project directory your favourit idle like VS code or cmd.
+3. Run the following command to install project dependencies:
+
+-if use cmd run this code to excure tha api:
+`codemon app`
+-if use vs code run this code first :
+`npm install`
+after that you can run this code:
+`npm start'
+
+
+## for excute the fourm 
 
 ## Installation
 
 1. Clone the repository or download the project ZIP file.
-2. Open a terminal and navigate to the project directory.
+2. Open the project directory your favourit idle like VS code.
 3. Run the following command to install dependencies:
 
-   ```bash
-   npm install
+### `npm install`
    
 ## Available Scripts
 
