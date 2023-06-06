@@ -7,6 +7,21 @@ export default function Login() {
   function handleSubmit(e) {
     e.preventDefault();
 
+    if (!email && !password) {
+      alert("Please fill in both email and password fields.");
+      return;
+    }
+
+    if (!email) {
+      alert("Please fill in the email field.");
+      return;
+    }
+
+    if (!password) {
+      alert("Please fill in the password field.");
+      return;
+    }
+
     console.log(email, password);
     fetch("http://localhost:5000/login-user", {
       method: "POST",
@@ -29,11 +44,16 @@ export default function Login() {
           window.localStorage.setItem("token", data.data);
           window.localStorage.setItem("loggedIn", true);
           window.location.href = "./userDetails";
+        }else{
+          alert("Please check your email and password");
+          setEmail("");
+          setPassword("");
         }
       });
   }
 
   return (
+    // login form
     <div className="auth-wrapper">
       <div className="auth-inner">
         <form onSubmit={handleSubmit}>
@@ -43,6 +63,7 @@ export default function Login() {
             <label>Email address</label>
             <input
               type="email"
+              value={email}
               className="form-control"
               placeholder="Enter email"
               onChange={(e) => setEmail(e.target.value)}
@@ -53,6 +74,7 @@ export default function Login() {
             <label>Password</label>
             <input
               type="password"
+              value={password}
               className="form-control"
               placeholder="Enter password"
               onChange={(e) => setPassword(e.target.value)}

@@ -9,6 +9,42 @@ export default function SignUp() {
   const [secretKey, setSecretKey] = useState("");
 
   const handleSubmit = (e) => {
+    //check all fields are empty or not
+    if (!fname && !lname && !email && !password) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
+    //check first name field empty or not
+    if (!fname) {
+      alert("Please fill in the First name field.");
+      return;
+    }
+    //check  last name field empty or not
+
+    if (!lname) {
+      alert("Please fill in the Last name field.");
+      return;
+    }
+    //check  email field empty or not
+    if (!email) {
+      alert("Please fill in the email field.");
+      return;
+    }
+    if (!password) {
+      alert("Please fill in the password field.");
+      return;
+    }
+    if (!/^[a-zA-Z\s]*$/.test(fname) || !/^[a-zA-Z\s]*$/.test(lname)) {
+      alert("Invalid name format. Only alphabets and spaces are allowed.");
+      return;
+    }
+    //check password length mor than long 8 or not 
+    if (password.length < 8) {
+      alert("Password should be at least 8 characters long.");
+      return;
+    }
+  //  check sign up user admin user or not 
     if (userType == "Admin" && secretKey != "12187@") {
       e.preventDefault();
       alert("Invalid Admin");
@@ -46,6 +82,7 @@ export default function SignUp() {
   };
 
   return (
+    // SignUp form
     <div className="auth-wrapper">
       <div className="auth-inner">
         <form onSubmit={handleSubmit}>

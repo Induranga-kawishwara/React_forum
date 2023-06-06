@@ -5,6 +5,10 @@ import { faHandPointRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ReactPaginate from "react-paginate";
 import { useRef } from "react";
+import Footer from "./footer/Footer";
+import Navbar from "./nav/navbar/Navbar";
+
+
 export default function AdminHome({ userData }) {
   //setting state
   const [data, setData] = useState([]);
@@ -46,7 +50,7 @@ export default function AdminHome({ userData }) {
         setData(data.data);
       });
   };
-
+  // get all pending comments
   const getPendingComment = () => {
     fetch("http://localhost:5000/getpendingcomment", {
       method: "GET",
@@ -59,10 +63,7 @@ export default function AdminHome({ userData }) {
   };
 
   //logout
-  const logOut = () => {
-    window.localStorage.clear();
-    window.location.href = "./sign-in";
-  };
+
 
   //deleting user
   const deleteUser = (id, name) => {
@@ -194,6 +195,10 @@ export default function AdminHome({ userData }) {
       });
   }
 
+   function Cancel() {
+     setMsg("");
+   }
+
   const handleQuestionSubmit = (e) => {
     e.preventDefault();
 
@@ -225,10 +230,16 @@ export default function AdminHome({ userData }) {
   };
 
   return (
-    <div className="auth-wrapper" style={{ height: "auto" }}>
-      <div className="auth-inner" style={{ width: "auto" }}>
-        <h3>Welcom Admin</h3>
-        <table style={{ width: 500 }}>
+    <div className="admin_controlpanel">
+      <Navbar />
+      <div className="title">
+        <h2>Welcom Admin</h2>
+      </div>
+      <div className="currenusers_body">
+        <div className="currenusers_body_title">
+          <h3>Current users</h3>
+        </div>
+        <table className="currenusers_table">
           <tr>
             <th>Name</th>
             <th>Email</th>
@@ -270,93 +281,103 @@ export default function AdminHome({ userData }) {
           activeClassName="active"
           forcePage={currentPage.current - 1}
         />
-        <input
-          placeholder="Name"
-          value={search}
-          onChange={(e) => setsearch(e.target.value)}
-        />
-        <button onClick={changeLimit}>search</button>
-        <button onClick={resettable}>Reset</button>
-
-        <table style={{ width: 500 }}>
-          <tr>
-            <th>Name</th>
-            <th>comment</th>
-            <th>approve</th>
-            <th>Delete</th>
-          </tr>
-          {comments.length > 0 ? (
-            comments.map((c) => (
-              <tr key={c._id}>
-                <td>{c.user}</td>
-                <td>{c.comment}</td>
-                <td>
-                  <FontAwesomeIcon
-                    icon={faHandPointRight}
-                    onClick={() => conformedpost(c._id)}
-                  />
-                </td>
-                <td>
-                  <FontAwesomeIcon
-                    icon={faTrash}
-                    onClick={() => deletecomment(c._id)}
-                  />
-                </td>
-              </tr>
-            ))
-          ) : (
+      </div>
+      <div className="pendincomment_body">
+        <div className="pendincomment_title">
+          <h3>Pending Comments</h3>
+        </div>
+        <div className="search_bar">
+          <input
+            placeholder="Name"
+            value={search}
+            onChange={(e) => setsearch(e.target.value)}
+          />
+          <button onClick={changeLimit}>search</button>
+          <button onClick={resettable}>Reset</button>
+        </div>
+        <div className="pendingcomment_table_body">
+          <table className="pendingcomment_table">
             <tr>
-              <td colSpan={4}>No comments found</td>
+              <th>Name</th>
+              <th>comment</th>
+              <th>approve</th>
+              <th>Delete</th>
             </tr>
-          )}
-        </table>
-        <ReactPaginate
-          breakLabel="..."
-          nextLabel="next >"
-          onPageChange={handlecomment}
-          pageRangeDisplayed={5}
-          pageCount={pageCount2}
-          previousLabel="< previous"
-          renderOnZeroPageCount={null}
-          marginPagesDisplayed={2}
-          containerClassName="pagination justify-content-center"
-          pageClassName="page-item"
-          pageLinkClassName="page-link"
-          previousClassName="page-item"
-          previousLinkClassName="page-link"
-          nextClassName="page-item"
-          nextLinkClassName="page-link"
-          activeClassName="active"
-          forcePage={currentPage2.current - 1}
-        />
-
-        <div className="container">
-          <div className="panel panel-default">
-            <div className="panel-body">
-              <h3>Any post</h3>
-              <hr />
-              <form onSubmit={handleQuestionSubmit}>
-                <div className="form-group">
+            {comments.length > 0 ? (
+              comments.map((c) => (
+                <tr key={c._id}>
+                  <td>{c.user}</td>
+                  <td>{c.comment}</td>
+                  <td>
+                    <FontAwesomeIcon
+                      icon={faHandPointRight}
+                      onClick={() => conformedpost(c._id)}
+                    />
+                  </td>
+                  <td>
+                    <FontAwesomeIcon
+                      icon={faTrash}
+                      onClick={() => deletecomment(c._id)}
+                    />
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={4}>No comments found</td>
+              </tr>
+            )}
+          </table>
+          <ReactPaginate
+            breakLabel="..."
+            nextLabel="next >"
+            onPageChange={handlecomment}
+            pageRangeDisplayed={5}
+            pageCount={pageCount2}
+            previousLabel="< previous"
+            renderOnZeroPageCount={null}
+            marginPagesDisplayed={2}
+            containerClassName="pagination justify-content-center"
+            pageClassName="page-item"
+            pageLinkClassName="page-link"
+            previousClassName="page-item"
+            previousLinkClassName="page-link"
+            nextClassName="page-item"
+            nextLinkClassName="page-link"
+            activeClassName="active"
+            forcePage={currentPage2.current - 1}
+          />
+        </div>
+      </div>
+      <div className="addmin_comment_body">
+        <div className="panel-body">
+          <div className="title">
+            <h3>Any post</h3>
+          </div>
+          <div className="addmin_comment_body_form">
+            <form onSubmit={handleQuestionSubmit}>
+              <div className="form-group">
+                <div className="comment">
                   <label htmlFor="comment">Write your question:</label>
-                  <textarea
-                    className="form-control"
-                    rows="5"
-                    name="msg"
-                    value={msg}
-                    onChange={handleMessageChange}
-                    required
-                  ></textarea>
                 </div>
-                <input type="submit" className="btn btn-primary" value="Send" />
-              </form>
-            </div>
+                <textarea
+                  className="form-control"
+                  rows="10"
+                  name="msg"
+                  value={msg}
+                  onChange={handleMessageChange}
+                  required
+                ></textarea>
+              </div>
+              <div className="button">
+                <button>Send</button>
+                <button onClick={Cancel}>Cancel</button>
+              </div>
+            </form>
           </div>
         </div>
-
-        <button onClick={logOut} className="btn btn-primary">
-          Log Out
-        </button>
       </div>
+      <Footer />
     </div>
   );
 }

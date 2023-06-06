@@ -4,11 +4,12 @@ import { useRef } from "react";
 import iphone15 from "../images/iphone15.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+//import footer and navigation bars
+import Footer from "./footer/Footer";
+import Navbar from "./nav/navbar/Navbar";
 
 const UserHome = ({ userData }) => {
-  // const [name, setName] = useState("");
-  const [fname, setFname] = useState("");
-  const [email, setEmail] = useState("");
+  // declared some variables to store data
   const [msg, setMsg] = useState("");
   const [reply, setreply] = useState("");
   const [comments, setComments] = useState([]);
@@ -16,35 +17,34 @@ const UserHome = ({ userData }) => {
   const currentPage = useRef();
   const [pageCount, setPageCount] = useState(1);
   const [search, setsearch] = useState("");
-  const [selected, setselected] = useState("");
+  const [selected, setselected] = useState(" ");
   const [approvedowncoments, setapprovedowncomment] = useState([]);
   const [unapprovedowncoments, setunapprovedowncomment] = useState([]);
-  // const [selectedcomment , setselectedcomment] = useState("");
-  const [truncatedComments, setTruncatedComments] = useState([]);
-
   const [showPopup, setShowPopup] = useState(false);
 
+  // Declared popup window opening function
   const handleClosePopup1 = () => {
     setShowPopup(true);
   };
 
+  // Declared popup window closing function
+
   const handleClosePopup = () => {
     setShowPopup(false);
+    setMsg("");
+    setallreplyies([]);
   };
-
+  //  Declared function to get selected comment and pass the comment id to this founction
   const selectcomment = (id) => {
     setselected(id.toString());
+    getallreplyes(id);
     handleClosePopup1();
-    getallreplyes();
   };
 
   useEffect(() => {
-    // getAllUser();
+    console.log(userData);
     currentPage.current = 1;
-    // getconformedcomments();
     getPaginatedUsers();
-    setEmail(userData.email);
-    setFname(userData.fname);
     handleowncomment();
     handleunapproveowncomment();
   }, []);
@@ -57,6 +57,7 @@ const UserHome = ({ userData }) => {
     setreply(e.target.value);
   };
 
+  // pass submitted question to mongoDb using "Post"
   const handleQuestionSubmit = (e) => {
     e.preventDefault();
 
@@ -69,8 +70,8 @@ const UserHome = ({ userData }) => {
         "Access-Control-Allow-Origin": "*",
       },
       body: JSON.stringify({
-        user: fname,
-        email,
+        user: userData.fname,
+        email: userData.email,
         comment: msg,
         // createdat :
       }),
@@ -80,46 +81,47 @@ const UserHome = ({ userData }) => {
         setMsg("");
         console.log(data, "userRegister");
         if (data.status == "ok") {
-          alert("Registration Successful");
+          alert("Comments have been sent");
         } else {
           alert("Something went wrong");
         }
       });
   };
 
+  // Get the current user's approved question from MongoDB using "get".
   function handleowncomment() {
-    console.log(fname);
-    console.log("Awaaaa");
     fetch(
-      `http://localhost:5000/owncomments?name=${fname}&email=${email}&isapprove=${"Approve"}`,
+      `http://localhost:5000/owncomments?name=${userData.fname}&email=${
+        userData.email
+      }&isapprove=${"Approve"}`,
       {
         method: "GET",
       }
     )
       .then((res) => res.json())
       .then((data) => {
-        console.log(data.data, "yoyo");
-        console.log("giyaaaaa");
         setapprovedowncomment(data.data || []);
       });
   }
+
+  // Get the current user's unapproved question from MongoDB using "get".
   function handleunapproveowncomment() {
-    console.log(fname);
-    console.log("Awaaaa");
+    console.log(userData.fname);
     fetch(
-      `http://localhost:5000/owncomments?name=${fname}&email=${email}&isapprove=${"Unpprove"}`,
+      `http://localhost:5000/owncomments?name=${userData.fname}&email=${
+        userData.email
+      }&isapprove=${"Unpprove"}`,
       {
         method: "GET",
       }
     )
       .then((res) => res.json())
       .then((data) => {
-        console.log(data.data, "yoyo");
-        console.log("giyaaaaa");
         setunapprovedowncomment(data.data || []);
       });
   }
 
+  // pass submitted reply to mongoDb using "Post"
   const handleReplySubmit = (e) => {
     e.preventDefault();
 
@@ -133,8 +135,8 @@ const UserHome = ({ userData }) => {
       },
       body: JSON.stringify({
         commentID: selected,
-        username: fname,
-        email,
+        username: userData.fname,
+        email: userData.email,
         reply,
       }),
     })
@@ -143,7 +145,7 @@ const UserHome = ({ userData }) => {
         console.log(data, "userRegister");
         if (data.status === "ok") {
           console.log(selected);
-          alert("Registration Successful");
+          alert("Reply have been sent");
         } else {
           alert("Something went wrong");
         }
@@ -151,12 +153,13 @@ const UserHome = ({ userData }) => {
       .catch((error) => {
         console.error("Error:", error);
       });
-      setreply("");
-      setShowPopup(false);
+    setreply("");
+    setShowPopup(false);
   };
 
-  function getallreplyes() {
-    fetch(`http://localhost:5000/getallreplies?selecte=${selected}`, {
+  // Get the all replies from MongoDB using "get".
+  function getallreplyes(id) {
+    fetch(`http://localhost:5000/getallreplies?selecte=${id.toString()}`, {
       method: "GET",
     })
       .then((res) => res.json())
@@ -200,6 +203,7 @@ const UserHome = ({ userData }) => {
       });
   }
 
+  // Declared function to reset the table
   function resettable() {
     getPaginatedUsers();
   }
@@ -207,6 +211,7 @@ const UserHome = ({ userData }) => {
   function Cancel() {
     setMsg("");
   }
+  // Declared this function to  delete current user's approved comment from the database
   const deleteowncomment = (id) => {
     if (window.confirm(`Are you sure you want to delete that comment`)) {
       fetch("http://localhost:5000/deleteowncommentr", {
@@ -230,7 +235,7 @@ const UserHome = ({ userData }) => {
     } else {
     }
   };
-
+  // Declared this function to delete the current user's unapproved comment from the database
   const deleteunapprovedowncomment = (id) => {
     if (window.confirm(`Are you sure you want to delete that comment`)) {
       fetch("http://localhost:5000/deletependingowncommentr", {
@@ -263,7 +268,9 @@ const UserHome = ({ userData }) => {
 
   return (
     <div className="clint">
+      <Navbar />
       <div className={`main ${showPopup ? "new_main" : ""}`}>
+        {/* Home page */}
         <section className="home" id="home">
           <div class="typewriter">
             <div class="text">Welcom </div>
@@ -271,7 +278,7 @@ const UserHome = ({ userData }) => {
             <h4>Find out our the new product</h4>
           </div>
         </section>
-
+        {/* About page */}
         <section class="about" id="about">
           <div class="max-width">
             <h2 class="title">About The new product </h2>
@@ -280,7 +287,7 @@ const UserHome = ({ userData }) => {
               <div class="column_left">
                 <img src={iphone15} alt="my picture" />
               </div>
-              <div class="column right">
+              <div class="column_right">
                 <div class="text">
                   Our new product is{" "}
                   <span class="typing-2">IPhone 15 pro max</span>
@@ -300,7 +307,7 @@ const UserHome = ({ userData }) => {
             </div>
           </div>
         </section>
-
+        {/* Comment form */}
         <section className="Community_forum" id="Community_forum">
           <div className="panel panel-default">
             <h2>Community forum</h2>
@@ -315,6 +322,9 @@ const UserHome = ({ userData }) => {
                 />
                 <button onClick={changeLimit}>search</button>
                 <button onClick={resettable}>Reset</button>
+                {/* <button onClick={logOut} className="btn btn-primary">
+                  Log Out
+                </button> */}
               </div>
               <div className="comment_tab">
                 <table className="comment_table">
@@ -326,7 +336,7 @@ const UserHome = ({ userData }) => {
                       <th>Poster</th>
                       <th>Date and Time</th>
                     </tr>
-                    {/* Render the comments here */}
+                    {/* check comment varible is null or not*/}
                     {comments.length === 0 ? (
                       <tr>
                         <td colSpan={5}>No comments found</td>
@@ -337,6 +347,7 @@ const UserHome = ({ userData }) => {
                           <td>{index + 1}</td>
                           {/* <td>{comment.comment}</td> */}
                           <td>
+                            {/* check comments are more than long 80  */}
                             {comment.comment.length > 80 ? (
                               <div>
                                 {truncateText(comment.comment)}
@@ -400,7 +411,7 @@ const UserHome = ({ userData }) => {
                   <div className="comment">
                     <label htmlFor="comment">Write your question:</label>
                   </div>
-
+                  {/* Text area to receive comments from the user */}
                   <textarea
                     className="form-control"
                     rows="5"
@@ -418,6 +429,7 @@ const UserHome = ({ userData }) => {
             </div>
           </div>
         </section>
+        {/* user controle panel */}
         <section className="controlepanal">
           <div className="control">
             <h2>User control panel</h2>
@@ -425,6 +437,7 @@ const UserHome = ({ userData }) => {
             <div className="tables">
               <div className="approve_table">
                 <h4>Approved comments</h4>
+                {/* table to show the user's approved comments */}
                 <table className="controle_table">
                   <tr>
                     <th>No</th>
@@ -483,6 +496,7 @@ const UserHome = ({ userData }) => {
               </div>
               <div className="Pending_table">
                 <h4>Pending comments</h4>
+                {/* table to show the user's unapproved comments */}
                 <table className="controle_table">
                   <tr>
                     <th>No</th>
@@ -563,7 +577,8 @@ const UserHome = ({ userData }) => {
               <textarea
                 className="form-control"
                 rows="8"
-                name="msg"
+                name="reply"
+                value={reply}
                 onChange={handleReply}
                 required
               ></textarea>
@@ -604,6 +619,7 @@ const UserHome = ({ userData }) => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

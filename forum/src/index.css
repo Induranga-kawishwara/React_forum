@@ -7,11 +7,97 @@
   text-decoration: none;
 }
 
-.auth-wrapper {
-  background: #1c8ef9 !important;
-  min-height: 100vh;
+ /* Loging page  */
+
+.loadingpage{
   display: flex;
-  font-weight: 400;
+  height: 100vh;
+  width: 100%;
+  background: #000;
+  align-items: center;
+  justify-content: center;
+}
+.loader{
+  height: 25px;
+  width: 25px;
+  position: relative;
+  animation: rotate 5s  infinite;
+}
+.ball{
+  position: absolute;
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+.upper{
+  left: 0;
+  top: -22px;
+  background: #2da2ff;
+  animation: upper 1s linear infinite;
+}
+@keyframes upper {
+  50%{
+    top: 22px;
+  }
+  100%{
+    top: 22px;
+  }
+}
+.right{
+  right: -22px;
+  top: 0;
+  background: #ff337a;
+  animation: right 1s linear infinite;
+}
+@keyframes right {
+  50%{
+    right: 22px;
+  }
+  100%{
+    right: 22px;
+  }
+}
+.lower{
+  bottom: -22px;
+  left: 0;
+  background: #ffff00;
+  animation: lower 1s linear infinite;
+}
+@keyframes lower {
+  50%{
+    bottom: 22px;
+  }
+  100%{
+    bottom: 22px;
+  }
+}
+.left{
+  left: -22px;
+  top: 0;
+  background: #00ff00;
+  animation: left 1s linear infinite;
+}
+@keyframes left {
+  50%{
+    left: 22px;
+  }
+  100%{
+    left: 22px;
+  }
+}
+
+
+/* Sign in and login pages */
+
+.auth-wrapper {
+  display: flex;
+  background: url("./images/loging_background.gif") no-repeat center;
+  height: 100vh;
+  color: #080808;
+  min-height: 500px;
+  background-size: cover;
+  background-attachment: fixed;
   font-family: 'Ubuntu', sans-serif;
 }
 
@@ -58,10 +144,6 @@ html,
   transition: all 0.3s;
 }
 
-.auth-wrapper .form-control:focus {
-  border-color: #167bff;
-  box-shadow: none;
-}
 
 .auth-wrapper h3 {
   text-align: center;
@@ -75,27 +157,7 @@ html,
 }
 
 
-
-/* 
-.popup{
-  width: 70%;
-  height: 80%;
-  background-color: crimson;
-  border-radius: 30px;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  border-style: solid;
-  border-color: white;
-  transform: translate(-50%,-50%) scale(1);
-  text-align: center;
-  padding: 0 30px 30px;
-  visibility: visible;
-  transition: transform 0.4s, top 0.4ms;
-  z-index: 1;
-} */
-
-
+ /* coustom main  */
 
 .main{
   visibility: visible;
@@ -108,27 +170,7 @@ html,
   user-select: none;
 }
 
-
- /* #popup .table table {
-  
-  margin-top: 5%;
-  margin-left: 0.5%;
-
-
-}  */
-
-
-
-
-
-
-/* .table tr:nth-child(even) td {
-  background-color: #f2f2f2;
-} */
-/* #popup .table table  {
-  border-collapse: separate;
-  border-spacing: 0 20px; 
-}  */
+/* home div tag  */
 
 .home{
   display: flex;
@@ -179,7 +221,7 @@ html,
   50% { border-color: crimson; }
 }
 
-
+/* details about the iteam page */
 
 .about{
   background-color: #fff;
@@ -204,20 +246,23 @@ html,
   margin-bottom: 5%;
 
 }
-.about .about-content .right .text{
+.about .about-content .column_right .text{
 
   font-size: 25px;
   font-weight: 600;
   margin-bottom: 10px;
 }
-.about .about-content .right .text span{
+.about .about-content .column_right .text span{
   color: crimson;
 }
-.about .about-content .right p{
+.about .about-content .column_right p{
   width: 60%;
   margin-left: 20%;
   padding-bottom: 5%;
 }
+
+/* Community_forum page */
+
 .Community_forum{
   background-color: #0a0a0a;
   color: #edfafa;
@@ -298,19 +343,7 @@ td {
 }
 
 
-
-/* .panel-body {
-  background-color: #edfafa;
-  border-radius: 10px;
-}
-
-#MyTable {
-  border: 0;
-}
-
-.form-group {
-  margin-bottom: 15px;
-} */
+/* user control panel page */
 
 .controlepanal{
   background-color: #fff;
@@ -350,6 +383,7 @@ td {
   padding-bottom: 1%;
 }
 
+/* popup window */
 
 .popup {
   color: #edfafa;
@@ -456,23 +490,141 @@ td {
 .popup .reply_table .table table{
   width: 100%;  
 }
-/*
 
-#popup .oldreply {
-  margin-top: -41%;
-  margin-left: 65%;
-} */
+/* admin control panel */
 
-/* #popup .table {
+.admin_controlpanel{
+  background-color: #000;
+  font-family: 'Ubuntu', sans-serif;
+
+}
+.admin_controlpanel .title{
   color: #edfafa;
-  height: 90%;
-  border: 1px solid black;
-  width: 100%;
-  margin-left: 65%;
-  z-index: 1000;
-  margin-top: 1%; */
-  /* border-spacing: 10px;  */
-  /* overflow: hidden;
-  overflow-y: scroll;
+  padding-top: 5%;
+}
+
+.admin_controlpanel .title .login_button{
+  display: flex;
+  margin-top: -2.5%;
+  margin-right: 5%;
+  justify-content: end;
+  gap: 10px; /* Adjust the value as needed */
+  padding-bottom: 3%;
+}
+.admin_controlpanel .title .login_button button{
+  color: #fff;
+  display: block;
+  width:10%!important;
+  height: 10%;
+  outline: none;
+  font-size: 100%;
+  font-weight: 500;
+  border-radius: 20px;
+  cursor: pointer;
+  flex-wrap: nowrap;
+  background: rgb(224, 48, 4);
+  border: 2px solid rgb(220, 27, 20);
+  transition: all 0.3s ease;
+}
+
+.admin_controlpanel .title .login_button button:hover{
+  color: rgb(224, 48, 4);
+  background: none;
+}
+
+
+
+.admin_controlpanel h3 {
+  color: crimson; 
+  font-size: 30px;
+  margin-bottom: 4%;
+
+}
+
+
+.currenusers_body , .pendincomment_body {
+  margin-left: 5%;
+  width: 90%;
+  /* border-color: #ffffff;
+  border-style: solid; */
+  padding-bottom: 2%;
   
-} */
+}
+.admin_controlpanel .currenusers_body h3{
+  text-align: left;
+
+}
+
+.admin_controlpanel .currenusers_table , .pendingcomment_table{
+  margin-top: -2%;
+  height: 40%;
+  width: 100%;
+  color: #fff;
+  margin-bottom: 2%;
+}
+
+.pendincomment_body .pendincomment_title{
+  text-align: left;
+}
+
+
+.pendincomment_body .search_bar{
+  margin-top: -4%;
+  display: flex;
+  justify-content: end;
+}
+
+.pendincomment_body .pendingcomment_table{
+  margin-top: 2%;
+  height: 40%;
+  width: 100%;
+  color: #fff;
+  margin-bottom: 2%;
+}
+.addmin_comment_body {
+  margin-top: -3%;
+  margin-left: 15%;
+  color: #fff;
+  width: 70%;
+  /* border-color: #ffffff;
+  border-style: solid; */
+  padding-bottom: 2%;
+}
+.addmin_comment_body textarea{
+  resize: none;
+  width: 100%;
+} 
+.addmin_comment_body .comment{
+  text-align: left;
+  font-size: 16px;
+  padding-bottom: 1%;
+}
+
+
+.addmin_comment_body .button{
+  display: flex;
+  margin-top: 1%;
+  justify-content: end;
+  gap: 10px; /* Adjust the value as needed */
+  padding-bottom: 3%;
+}
+.addmin_comment_body .button button{
+  color: #fff;
+  display: block;
+  width:15%!important;
+  height: 10%;
+  outline: none;
+  font-size: 100%;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  flex-wrap: nowrap;
+  background: rgb(33, 20, 220);
+  border: 2px solid rgb(33, 20, 220);
+  transition: all 0.3s ease;
+}
+
+.addmin_comment_body .button button:hover{
+  color: rgb(33, 20, 220);
+  background: none;
+}

@@ -22,7 +22,6 @@ function App() {
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/userDetails" element={<UserDetails />} />
         </Routes>
-        {/* <ImageUpload/> */}
       </div>
     </Router>
   );
