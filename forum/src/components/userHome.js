@@ -610,7 +610,7 @@ const UserHome = ({ userData }) => {
                     <tr key={replies.id}>
                       <td>{index + 1}</td>
                       <td>{replies.reply}</td>
-                      <td>{"posted by " + replies.user}</td>
+                      <td>{"posted by " + replies.username}</td>
                     </tr>
                   ))
                 )}
