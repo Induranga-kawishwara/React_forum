@@ -1,16 +1,3 @@
-// const mongoose = require("mongoose");
-
-// const ImageDetailsScehma = new mongoose.Schema(
-//   {
-//    image:String
-//   },
-//   {
-//     collection: "ImageDetails",
-//   }
-// );
-
-// mongoose.model("ImageDetails", ImageDetailsScehma);
-
 const mongoose = require("mongoose");
 
 const pandin = new mongoose.Schema(
