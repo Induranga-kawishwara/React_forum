@@ -16,8 +16,10 @@ Short description of the project.
    npm install
    
    
-#Usage
+##Usage
 1. Start the development server by running the following command:
+ ```bash
+   npm start
 
 npm start
 
