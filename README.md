@@ -5,7 +5,7 @@ A platform for discussions and sharing information.
 ## Prerequisites
 
 - Node.js (version X.X.X) - [Installation Guide](https://nodejs.org)
-- MongoDB (version X.X.X) - [Installation Guide](https://www.npmjs.com/package/mongoose)
+- MongoDB(mongoose) (version X.X.X) - [Installation Guide](https://www.npmjs.com/package/mongoose)
 
 ## Video on how to run the code:
 
