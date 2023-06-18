@@ -7,6 +7,10 @@ export default function UserDetails() {
   const [admin, setAdmin] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
 
+  const sleep = (milliseconds) => {
+    return new Promise((resolve) => setTimeout(resolve, milliseconds));
+  };
+
   useEffect(() => {
     fetch("http://localhost:5000/userData", {
       method: "POST",
@@ -21,7 +25,7 @@ export default function UserDetails() {
       }),
     })
       .then((res) => res.json())
-      .then((data) => {
+      .then(async (data) => {
         console.log(data, "userData");
         if (data.data.userType === "Admin") {
           setAdmin(true);
@@ -33,13 +37,14 @@ export default function UserDetails() {
           window.localStorage.clear();
           window.location.href = "./sign-in";
         }
-
+        
+        await sleep(2000);
         setDataLoaded(true); // Set dataLoaded to true after data is loaded
       });
   }, []);
 
   if (!dataLoaded) {
-    console.log("loding");
+    console.log("loading");
     // Render loading state while data is being fetched
     return (
       <div>
@@ -53,12 +58,11 @@ export default function UserDetails() {
         </section>
       </div>
     );
-  }else{
-
-  return admin ? (
-    <AdminHome userData={userData} />
-  ) : (
-    
-    <UserHome userData={userData} />
-  );}
+  } else {
+    return admin ? (
+      <AdminHome userData={userData} />
+    ) : (
+      <UserHome userData={userData} />
+    );
+  }
 }
