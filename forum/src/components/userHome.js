@@ -433,7 +433,7 @@ const UserHome = ({ userData }) => {
         <section className="controlepanal">
           <div className="control">
             <h2>User control panel</h2>
-            <h3>Do you want to manage your activitys? </h3>
+            <h3>Do you want to manage your activities? </h3>
             <div className="tables">
               <div className="approve_table">
                 <h4>Approved comments</h4>
