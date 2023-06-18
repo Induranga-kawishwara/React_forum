@@ -22,7 +22,6 @@ export default function UserDetails() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("malawade utta");
         console.log(data, "userData");
         if (data.data.userType === "Admin") {
           setAdmin(true);
