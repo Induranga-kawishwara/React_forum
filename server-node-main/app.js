@@ -279,7 +279,6 @@ app.get("/paginatedUsers2", async (req, res) => {
   const page = parseInt(req.query.page);
 
   if (!search) {
-    console.log("mona huththakda");
     allcomment = await comments.find({});
   } else {
     allcomment = await comments.find({ user: search });
