@@ -1,4 +1,3 @@
-ifonix_forum
 
 A platform for discussions and sharing information.
 
