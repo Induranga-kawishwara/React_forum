@@ -1,168 +1,200 @@
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function SignUp() {
-  const [fname, setFname] = useState("");
-  const [lname, setLname] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [userType, setUserType] = useState("User");
-  const [secretKey, setSecretKey] = useState("");
+  const navigate = useNavigate();
+  const API = process.env.REACT_APP_API_URL;
 
-  const handleSubmit = (e) => {
-    //check all fields are empty or not
-    if (!fname && !lname && !email && !password) {
-      alert("Please fill in all fields.");
+  const [form, setForm] = useState({
+    userType: "User",
+    secretKey: "",
+    fname: "",
+    lname: "",
+    email: "",
+    password: "",
+  });
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  const validate = () => {
+    const errs = {};
+    if (!form.fname.trim()) errs.fname = "First name is required.";
+    else if (!/^[a-zA-Z\s]+$/.test(form.fname))
+      errs.fname = "Only letters and spaces allowed.";
+    if (!form.lname.trim()) errs.lname = "Last name is required.";
+    else if (!/^[a-zA-Z\s]+$/.test(form.lname))
+      errs.lname = "Only letters and spaces allowed.";
+    if (!form.email.trim()) errs.email = "Email is required.";
+    else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(form.email))
+      errs.email = "Invalid email address.";
+    if (!form.password) errs.password = "Password is required.";
+    else if (form.password.length < 8)
+      errs.password = "Password must be at least 8 characters.";
+    if (form.userType === "Admin" && form.secretKey !== "12187@")
+      errs.secretKey = "Invalid admin secret key.";
+    return errs;
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((f) => ({ ...f, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const errs = validate();
+    if (Object.keys(errs).length) {
+      setErrors(errs);
       return;
     }
 
-    //check first name field empty or not
-    if (!fname) {
-      alert("Please fill in the First name field.");
-      return;
-    }
-    //check  last name field empty or not
-
-    if (!lname) {
-      alert("Please fill in the Last name field.");
-      return;
-    }
-    //check  email field empty or not
-    if (!email) {
-      alert("Please fill in the email field.");
-      return;
-    }
-    if (!password) {
-      alert("Please fill in the password field.");
-      return;
-    }
-    if (!/^[a-zA-Z\s]*$/.test(fname) || !/^[a-zA-Z\s]*$/.test(lname)) {
-      alert("Invalid name format. Only alphabets and spaces are allowed.");
-      return;
-    }
-    //check password length mor than long 8 or not 
-    if (password.length < 8) {
-      alert("Password should be at least 8 characters long.");
-      return;
-    }
-  //  check sign up user admin user or not 
-    if (userType == "Admin" && secretKey != "12187@") {
-      e.preventDefault();
-      alert("Invalid Admin");
-    } else {
-      e.preventDefault();
-
-      console.log(fname, lname, email, password);
-      fetch("http://localhost:5000/register", {
-        method: "POST",
-        crossDomain: true,
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          "Access-Control-Allow-Origin": "*",
+    setErrors({});
+    setLoading(true);
+    try {
+      const { data } = await axios.post(
+        `${API}/auth/register`,
+        {
+          fname: form.fname,
+          lname: form.lname,
+          email: form.email,
+          password: form.password,
+          userType: form.userType,
         },
-        body: JSON.stringify({
-          fname,
-          email,
-          lname,
-          password,
-          userType,
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data, "userRegister");
-          if (data.status == "ok") {
-            window.location.href = "./sign-in";
-            alert("Registration Successful");
-          } else {
-            alert("Something went wrong");
-          }
-        });
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      if (data.status === "ok") {
+        navigate("/sign-in");
+      } else {
+        setErrors({ submit: data.error || "Registration failed." });
+      }
+    } catch (err) {
+      setErrors({ submit: err.response?.data?.error || err.message });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    // SignUp form
     <div className="auth-wrapper">
       <div className="auth-inner">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} noValidate>
           <h3>Sign Up</h3>
-          <div>
-            Register As
-            <input
-              type="radio"
-              name="UserType"
-              value="User"
-              onChange={(e) => setUserType(e.target.value)}
-            />
-            User
-            <input
-              type="radio"
-              name="UserType"
-              value="Admin"
-              onChange={(e) => setUserType(e.target.value)}
-            />
-            Admin
+
+          {/* User Type */}
+          <div className="mb-3">
+            <label className="form-label">Register As</label>
+            <br />
+            {["User", "Admin"].map((type) => (
+              <label key={type} className="me-3">
+                <input
+                  type="radio"
+                  name="userType"
+                  value={type}
+                  checked={form.userType === type}
+                  onChange={handleChange}
+                />{" "}
+                {type}
+              </label>
+            ))}
           </div>
-          {userType == "Admin" ? (
+
+          {/* Secret Key for Admin */}
+          {form.userType === "Admin" && (
             <div className="mb-3">
-              <label>Secret Key</label>
+              <label className="form-label">Secret Key</label>
               <input
+                name="secretKey"
                 type="text"
-                className="form-control"
-                placeholder="Secret Key"
-                onChange={(e) => setSecretKey(e.target.value)}
+                className={`form-control ${
+                  errors.secretKey ? "is-invalid" : ""
+                }`}
+                value={form.secretKey}
+                onChange={handleChange}
               />
+              {errors.secretKey && (
+                <div className="invalid-feedback">{errors.secretKey}</div>
+              )}
             </div>
-          ) : null}
+          )}
 
+          {/* First Name */}
           <div className="mb-3">
-            <label>First name</label>
+            <label className="form-label">First name</label>
             <input
+              name="fname"
               type="text"
-              className="form-control"
-              placeholder="First name"
-              onChange={(e) => setFname(e.target.value)}
+              className={`form-control ${errors.fname ? "is-invalid" : ""}`}
+              value={form.fname}
+              onChange={handleChange}
             />
+            {errors.fname && (
+              <div className="invalid-feedback">{errors.fname}</div>
+            )}
           </div>
 
+          {/* Last Name */}
           <div className="mb-3">
-            <label>Last name</label>
+            <label className="form-label">Last name</label>
             <input
+              name="lname"
               type="text"
-              className="form-control"
-              placeholder="Last name"
-              onChange={(e) => setLname(e.target.value)}
+              className={`form-control ${errors.lname ? "is-invalid" : ""}`}
+              value={form.lname}
+              onChange={handleChange}
             />
+            {errors.lname && (
+              <div className="invalid-feedback">{errors.lname}</div>
+            )}
           </div>
 
+          {/* Email */}
           <div className="mb-3">
-            <label>Email address</label>
+            <label className="form-label">Email address</label>
             <input
+              name="email"
               type="email"
-              className="form-control"
-              placeholder="Enter email"
-              onChange={(e) => setEmail(e.target.value)}
+              className={`form-control ${errors.email ? "is-invalid" : ""}`}
+              value={form.email}
+              onChange={handleChange}
             />
+            {errors.email && (
+              <div className="invalid-feedback">{errors.email}</div>
+            )}
           </div>
 
+          {/* Password */}
           <div className="mb-3">
-            <label>Password</label>
+            <label className="form-label">Password</label>
             <input
+              name="password"
               type="password"
-              className="form-control"
-              placeholder="Enter password"
-              onChange={(e) => setPassword(e.target.value)}
+              className={`form-control ${errors.password ? "is-invalid" : ""}`}
+              value={form.password}
+              onChange={handleChange}
             />
+            {errors.password && (
+              <div className="invalid-feedback">{errors.password}</div>
+            )}
           </div>
 
+          {/* Submit */}
+          {errors.submit && (
+            <div className="alert alert-danger">{errors.submit}</div>
+          )}
           <div className="d-grid">
-            <button type="submit" className="btn btn-primary">
-              Sign Up
+            <button
+              type="submit"
+              className="btn btn-primary"
+              disabled={loading}
+            >
+              {loading ? "Registering…" : "Sign Up"}
             </button>
           </div>
-          <p className="forgot-password text-right">
-            Already registered <a href="/sign-in">sign in?</a>
+
+          <p className="mt-3 text-center">
+            Already registered? <a href="/sign-in">Sign in here</a>
           </p>
         </form>
       </div>
