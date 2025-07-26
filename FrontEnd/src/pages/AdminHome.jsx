@@ -4,8 +4,6 @@ import { faTrash, faHandPointRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Pagination from "../components/UI/Pagination";
 import Table from "../components/UI/Table";
-import Navbar from "../components/Layout/Navbar";
-import Footer from "../components/Layout/Footer";
 
 export default function AdminHome({ userData }) {
   const [users, setUsers] = useState([]);
@@ -67,8 +65,6 @@ export default function AdminHome({ userData }) {
 
   return (
     <div>
-      <Navbar />
-
       <section className="container my-4">
         <h2>Current Users</h2>
         <Table
@@ -142,8 +138,6 @@ export default function AdminHome({ userData }) {
           }}
         />
       </section>
-
-      <Footer />
     </div>
   );
 }

@@ -4,8 +4,6 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Pagination from "../components/UI/Pagination";
 import Table from "../components/UI/Table";
-import Navbar from "../components/Layout/Navbar";
-import Footer from "../components/Layout/Footer";
 import TextArea from "../components/Form/TextArea";
 
 export default function UserHome({ userData }) {
@@ -81,8 +79,6 @@ export default function UserHome({ userData }) {
 
   return (
     <div>
-      <Navbar />
-
       <section className="container my-4">
         <h2>Community Forum</h2>
         <form onSubmit={submitQuestion}>
@@ -236,8 +232,6 @@ export default function UserHome({ userData }) {
           )}
         />
       </section>
-
-      <Footer />
     </div>
   );
 }
