@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-export default function SignUp() {
+export default function RegisterPage() {
   const navigate = useNavigate();
   const API = process.env.REACT_APP_API_URL;
 
