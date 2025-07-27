@@ -1,11 +1,12 @@
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import API from "../../api/axios";
 
 export default function Navbar() {
   const { setUser } = useContext(AuthContext);
 
-  const logOut = () => {
-    localStorage.clear();
+  const logOut = async () => {
+    await API.post("auth/logout");
     setUser(null);
   };
 

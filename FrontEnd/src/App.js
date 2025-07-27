@@ -11,14 +11,14 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <Navbar />
         <Routes>
-          <Navbar />
           <Route path="/" element={<Navigate to="/sign-in" />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/sign-in" element={<Login />} />
           <Route path="/userDetails" element={<UserDetails />} />
-          <Footer />
         </Routes>
+        <Footer />
       </AuthProvider>
     </BrowserRouter>
   );

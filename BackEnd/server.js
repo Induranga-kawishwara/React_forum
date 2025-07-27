@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 
 const connectDB = require("./config/db");
 const { errorHandler } = require("./middleware/errorHandler");
@@ -14,12 +15,13 @@ const replyRoutes = require("./routes/replies");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Connect to DB
+// Connect DB
 connectDB();
 
-// Global middleware
+// Middleware
 app.use(morgan("dev"));
-app.use(cors());
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.set("view engine", "ejs");
@@ -33,6 +35,4 @@ app.use("/api/replies", replyRoutes);
 // Error handler
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

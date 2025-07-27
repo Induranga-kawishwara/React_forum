@@ -24,10 +24,23 @@ exports.login = async (req, res, next) => {
       return res.status(400).json({ error: "Invalid credentials" });
     }
     const token = jwt.sign({ email }, process.env.JWT_SECRET, {
-      expiresIn: process.env.TOKEN_EXPIRES_IN,
+      expiresIn: process.env.TOKEN_EXPIRES_IN || "1h",
     });
-    res.json({ status: "ok", token });
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
+      maxAge: 3600000,
+    });
+
+    res.json({ status: "ok" });
   } catch (err) {
     next(err);
   }
+};
+
+exports.logout = (req, res) => {
+  res.clearCookie("token");
+  res.json({ status: "ok", message: "Logged out" });
 };

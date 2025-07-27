@@ -6,7 +6,7 @@ import UserHome from "./UserHome";
 export default function UserDetails() {
   const { user } = useContext(AuthContext);
 
-  if (!user) return null; // or a spinner
+  if (!user) return null;
 
   return user.userType === "Admin" ? (
     <AdminHome userData={user} />

@@ -33,12 +33,8 @@ export default function Login() {
     setLoading(true);
 
     try {
-      // adjust endpoint if your backend uses a different route
-      const { data } = await API.post("/login", form);
-
+      const { data } = await API.post("auth/login", form);
       if (data.status === "ok") {
-        localStorage.setItem("token", data.data);
-        localStorage.setItem("loggedIn", "true");
         navigate("/userDetails");
       } else {
         setErrors({ submit: data.error || "Invalid credentials." });
@@ -54,7 +50,6 @@ export default function Login() {
     <div className="auth-wrapper">
       <div className="auth-inner">
         <h3>Sign In</h3>
-
         <form onSubmit={handleSubmit} noValidate>
           <Input
             label="Email"
@@ -64,7 +59,6 @@ export default function Login() {
             onChange={handleChange}
             error={errors.email}
           />
-
           <Input
             label="Password"
             name="password"
@@ -73,16 +67,13 @@ export default function Login() {
             onChange={handleChange}
             error={errors.password}
           />
-
           {errors.submit && (
             <div className="alert alert-danger">{errors.submit}</div>
           )}
-
           <Button type="submit" disabled={loading}>
             {loading ? "Signing in…" : "Submit"}
           </Button>
         </form>
-
         <p className="mt-3">
           Don’t have an account?{" "}
           <button

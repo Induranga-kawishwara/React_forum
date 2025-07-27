@@ -9,22 +9,15 @@ export function AuthProvider({ children }) {
   const nav = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      nav("/sign-in");
-      return;
-    }
-    API.post("/userData", { token })
+    API.get("users/me")
       .then((r) => {
         if (r.data.status === "ok") {
           setUser(r.data.data);
         } else {
-          localStorage.clear();
           nav("/sign-in");
         }
       })
       .catch(() => {
-        localStorage.clear();
         nav("/sign-in");
       });
   }, [nav]);
