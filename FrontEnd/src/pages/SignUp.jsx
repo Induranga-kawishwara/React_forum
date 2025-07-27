@@ -45,7 +45,7 @@ export default function SignUp() {
     setErrors({});
     setLoading(true);
     try {
-      const { data } = await API.post("/register", form);
+      const { data } = await API.post("auth/register", form);
       if (data.status === "ok") {
         navigate("/sign-in");
       } else {

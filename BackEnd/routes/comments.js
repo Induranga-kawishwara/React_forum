@@ -5,15 +5,22 @@ const {
   listPending,
   confirm,
   deletePending,
+  getOwn,
+  deleteOwnApproved,
+  deleteOwnPending,
 } = require("../controllers/commentController");
 
-// public add comment
+// public
 router.post("/", add);
 
-// admin routes
-router.use(protect);
-router.get("/", listPending);
-router.post("/:id/ok", confirm);
-router.delete("/:id", deletePending);
+// admin protected
+router.get("/", protect, listPending);
+router.post("/:id/ok", protect, confirm);
+router.delete("/:id", protect, deletePending);
+
+// own comments
+router.get("/own", getOwn);
+router.post("/own/delete", deleteOwnPending);
+router.post("/own/approved/delete", deleteOwnApproved);
 
 module.exports = router;

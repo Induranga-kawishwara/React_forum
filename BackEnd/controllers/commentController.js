@@ -21,8 +21,7 @@ exports.listPending = async (req, res, next) => {
 
 exports.confirm = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const pending = await PendingComment.findById(id);
+    const pending = await PendingComment.findById(req.params.id);
     if (!pending) return res.status(404).json({ error: "Not found" });
 
     await ConfirmedComment.create({
@@ -42,6 +41,39 @@ exports.deletePending = async (req, res, next) => {
   try {
     await PendingComment.deleteOne({ _id: req.params.id });
     res.json({ status: "ok" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.getOwn = async (req, res, next) => {
+  try {
+    const { name, email, isapprove } = req.query;
+    let comments = [];
+    if (isapprove === "Approve") {
+      comments = await ConfirmedComment.find({ user: name, email });
+    } else {
+      comments = await PendingComment.find({ user: name, email });
+    }
+    res.json({ status: "ok", data: comments });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.deleteOwnApproved = async (req, res, next) => {
+  try {
+    await ConfirmedComment.deleteOne({ _id: req.body.commentId });
+    res.json({ status: "ok", data: "Deleted" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.deleteOwnPending = async (req, res, next) => {
+  try {
+    await PendingComment.deleteOne({ _id: req.body.commentId });
+    res.json({ status: "ok", data: "Deleted" });
   } catch (err) {
     next(err);
   }
